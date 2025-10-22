@@ -1,0 +1,39 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="text-center">Добро пожаловать в наш магазин!</h1>
+        <p class="lead text-center">Лучшие товары по лучшим ценам</p>
+        
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Качество</h5>
+                        <p class="card-text">Мы гарантируем высокое качество всех товаров</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Доставка</h5>
+                        <p class="card-text">Быстрая доставка по всей стране</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Поддержка</h5>
+                        <p class="card-text">Круглосуточная поддержка клиентов</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
