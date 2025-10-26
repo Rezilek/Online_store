@@ -8,32 +8,31 @@
         <h1 class="text-center">Добро пожаловать в наш магазин!</h1>
         <p class="lead text-center">Лучшие товары по лучшим ценам</p>
         
-        <div class="row mt-5">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Качество</h5>
-                        <p class="card-text">Мы гарантируем высокое качество всех товаров</p>
+        <!-- Новые продукты -->
+        {% if latest_products %}
+        <div class="mt-5">
+            <h2>Новые поступления</h2>
+            <div class="row">
+                {% for product in latest_products %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.description|truncatewords:10 }}</p>
+                            <p class="card-text"><strong>{{ product.price }} руб.</strong></p>
+                            <p class="card-text"><small class="text-muted">{{ product.category.name }}</small></p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Доставка</h5>
-                        <p class="card-text">Быстрая доставка по всей стране</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Поддержка</h5>
-                        <p class="card-text">Круглосуточная поддержка клиентов</p>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
+        {% endif %}
+
+        <!-- Остальной контент -->
     </div>
 </div>
 {% endblock %}
