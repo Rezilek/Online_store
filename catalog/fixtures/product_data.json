@@ -1,0 +1,41 @@
+[
+{
+  "model": "catalog.product",
+  "pk": 4,
+  "fields": {
+    "name": "Smartphone",
+    "description": null,
+    "image": "",
+    "category": 8,
+    "price": "25000.00",
+    "created_at": "2025-10-26T09:12:29.584Z",
+    "updated_at": "2025-10-26T09:12:29.584Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 5,
+  "fields": {
+    "name": "T-Shirt",
+    "description": null,
+    "image": "",
+    "category": 9,
+    "price": "1500.00",
+    "created_at": "2025-10-26T09:12:55.308Z",
+    "updated_at": "2025-10-26T09:12:55.308Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 6,
+  "fields": {
+    "name": "Python Book",
+    "description": null,
+    "image": "",
+    "category": 10,
+    "price": "1200.00",
+    "created_at": "2025-10-26T09:13:09.971Z",
+    "updated_at": "2025-10-26T09:13:09.971Z"
+  }
+}
+]
