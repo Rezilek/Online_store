@@ -20,3 +20,20 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+    from blog.models import BlogPost
+
+    # Создаем тестовые записи блога
+    BlogPost.objects.create(
+        title="Первая статья",
+        content="Содержимое первой статьи...",
+        is_published=True
+    )
+
+    BlogPost.objects.create(
+        title="Вторая статья",
+        content="Содержимое второй статьи...",
+        is_published=False  # Не опубликована
+    )
+
+    print("Тестовые данные созданы!")
