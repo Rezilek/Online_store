@@ -20,9 +20,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('catalog.urls')),  # Подключаем URLs приложения catalog
+    path('', include('catalog.urls')),
+    path('blog/', include('blog.urls')),  # ПОДКЛЮЧАЕМ URLs БЛОГА
 ]
 
 # Добавляем обработку медиафайлов только в режиме DEBUG
