@@ -5,9 +5,13 @@
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <h1 class="text-center mb-5">Добро пожаловать в наш магазин!</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Наш каталог</h1>
+            {% if user.is_staff %}
+            <a href="{% url 'product_create' %}" class="btn btn-primary">Добавить товар</a>
+            {% endif %}
+        </div>
 
-        <!-- Список товаров -->
         <div class="row">
             {% for product in products %}
             <div class="col-lg-4 col-md-6 mb-4">
@@ -30,11 +34,25 @@
                             <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary">Подробнее</a>
                         </div>
                     </div>
+
+                    {% if user.is_staff %}
+                    <div class="card-footer">
+                        <div class="btn-group w-100">
+                            <a href="{% url 'product_update' product.pk %}" class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                            <a href="{% url 'product_delete' product.pk %}" class="btn btn-sm btn-outline-danger">Удалить</a>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             {% empty %}
             <div class="col-12">
-                <div class="alert alert-info">Товары пока не добавлены</div>
+                <div class="alert alert-info text-center">
+                    <h4>Товары пока не добавлены</h4>
+                    {% if user.is_staff %}
+                    <a href="{% url 'product_create' %}" class="btn btn-primary mt-2">Добавить первый товар</a>
+                    {% endif %}
+                </div>
             </div>
             {% endfor %}
         </div>

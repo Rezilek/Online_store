@@ -19,13 +19,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'home' %}">Главная</a></li>
-                <li class="breadcrumb-item">
-                    {% if product.category %}
-                        <a href="#">{{ product.category.name }}</a>
-                    {% else %}
-                        <span>Без категории</span>
-                    {% endif %}
-                </li>
+                <li class="breadcrumb-item"><a href="#">{{ product.category.name }}</a></li>
                 <li class="breadcrumb-item active">{{ product.name }}</li>
             </ol>
         </nav>
@@ -42,23 +36,12 @@
             </div>
             <div class="col-md-6">
                 <h1>{{ product.name }}</h1>
-                <p class="text-muted">
-                    Категория:
-                    {% if product.category %}
-                        {{ product.category.name }}
-                    {% else %}
-                        Не указана
-                    {% endif %}
-                </p>
-                <h3 class="text-primary">{{ product.price|floatformat:2 }} руб.</h3>
+                <p class="text-muted">Категория: {{ product.category.name }}</p>
+                <h3 class="text-primary">{{ product.price }} руб.</h3>
 
                 <div class="mt-4">
                     <h4>Описание</h4>
-                    {% if product.description %}
-                        <p>{{ product.description|linebreaks }}</p>
-                    {% else %}
-                        <p class="text-muted">Описание отсутствует</p>
-                    {% endif %}
+                    <p>{{ product.description|linebreaks }}</p>
                 </div>
 
                 <div class="mt-4">
@@ -72,6 +55,13 @@
                 <div class="mt-4">
                     <button class="btn btn-primary btn-lg">Добавить в корзину</button>
                     <a href="{% url 'home' %}" class="btn btn-outline-secondary">Назад к каталогу</a>
+
+                    {% if user.is_staff %}
+                    <div class="mt-2">
+                        <a href="{% url 'product_update' product.pk %}" class="btn btn-outline-primary">Редактировать</a>
+                        <a href="{% url 'product_delete' product.pk %}" class="btn btn-outline-danger">Удалить</a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
