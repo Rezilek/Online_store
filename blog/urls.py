@@ -6,7 +6,9 @@ from .views import (
     BlogPostUpdateView,
     BlogPostDeleteView
 )
+from . import views
 
+app_name = 'catalog'
 app_name = 'blog'
 
 urlpatterns = [
@@ -15,4 +17,5 @@ urlpatterns = [
     path('post/create/', BlogPostCreateView.as_view(), name='post_create'),
     path('post/<int:pk>/update/', BlogPostUpdateView.as_view(), name='post_update'),
     path('post/<int:pk>/delete/', BlogPostDeleteView.as_view(), name='post_delete'),
+    path('', views.ProductListView.as_view(), name='product_list'),
 ]

@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.core.mail import send_mail  # ДОБАВЛЯЕМ ИМПОРТ
 from django.conf import settings  # ДОБАВЛЯЕМ ИМПОРТ
 from .models import BlogPost
+from .models import Product
 
 
 class BlogPostListView(ListView):
@@ -83,3 +84,9 @@ class BlogPostDeleteView(DeleteView):
     model = BlogPost
     template_name = 'blog/blogpost_confirm_delete.html'
     success_url = reverse_lazy('blog:post_list')
+
+
+class ProductListView(ListView):
+    model = Product
+    template_name = 'catalog/product_list.html'
+    context_object_name = 'products'

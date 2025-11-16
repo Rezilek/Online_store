@@ -76,3 +76,7 @@ class ProductDeleteView(DeleteView):
     template_name = 'catalog/product_confirm_delete.html'
     success_url = reverse_lazy('home')
     context_object_name = 'product'
+
+
+class ProductListView:
+    pass
