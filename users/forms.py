@@ -56,3 +56,11 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name', 'avatar', 'phone', 'country')
+
+
+class Userregisterform:
+    pass
+
+
+class Userprofileform:
+    pass

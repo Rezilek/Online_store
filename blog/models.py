@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class BlogPost(models.Model):
     objects = None
     title = models.CharField(
@@ -30,13 +29,10 @@ class BlogPost(models.Model):
     )
 
     class Meta:
+        app_label = 'blog'  # Добавляем явное указание app_label
         verbose_name = 'Блоговая запись'
         verbose_name_plural = 'Блоговые записи'
         ordering = ['-created_at']
 
     def __str__(self):
         return self.title
-
-
-class Product:
-    pass
