@@ -1,105 +1,106 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
-from .models import Product
-import os
-from django.utils.translation import gettext_lazy as _
+import re
+from .models import User
 
 
-class ProductForm(forms.ModelForm):
-    # Константы с запрещенными словами
-    FORBIDDEN_WORDS = [
-        'казино', 'криптовалюта', 'крипта', 'биржа', 'дешево',
-        'бесплатно', 'обман', 'полиция', 'радар'
-    ]
+class UserRegisterForm(UserCreationForm):
+    email = forms.EmailField(
+        label='Email',
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введите email',
+            'required': 'required'
+        })
+    )
+    password1 = forms.CharField(
+        label='Пароль',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введите пароль',
+            'minlength': '8'
+        }),
+        help_text='Пароль должен содержать минимум 8 символов, включая буквы и цифры.'
+    )
+    password2 = forms.CharField(
+        label='Подтверждение пароля',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Повторите пароль'
+        })
+    )
 
     class Meta:
-        model = Product
-        fields = ['name', 'description', 'image', 'category', 'price']
+        model = User
+        fields = ('email', 'password1', 'password2')
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise ValidationError('Пользователь с таким email уже существует.')
+        return email
 
-        # Стилизация всех полей
-        for field_name, field in self.fields.items():
-            # Базовые классы для всех полей
-            field.widget.attrs['class'] = 'form-control'
+    def clean_password1(self):
+        password1 = self.cleaned_data.get('password1')
+        if len(password1) < 8:
+            raise ValidationError('Пароль должен содержать минимум 8 символов.')
+        if not re.search(r'[A-Za-z]', password1) or not re.search(r'\d', password1):
+            raise ValidationError('Пароль должен содержать буквы и цифры.')
+        return password1
 
-            # Добавляем placeholder
-            if field_name == 'name':
-                field.widget.attrs['placeholder'] = 'Введите название товара'
-            elif field_name == 'description':
-                field.widget.attrs['placeholder'] = 'Введите описание товара'
-            elif field_name == 'price':
-                field.widget.attrs['placeholder'] = '0.00'
 
-            # Специальная стилизация для определенных полей
-            if field_name == 'description':
-                field.widget.attrs['rows'] = 4
-                field.widget.attrs['class'] += ' form-control-textarea'
-            elif field_name == 'price':
-                field.widget.attrs['step'] = '0.01'
-                field.widget.attrs['min'] = '0'
-                field.widget.attrs['class'] += ' form-control-price'
-            elif field_name == 'image':
-                field.widget.attrs['class'] = 'form-control form-control-file'
-            elif field_name == 'category':
-                field.widget.attrs['class'] += ' form-select'
+class UserProfileForm(forms.ModelForm):
+    email = forms.EmailField(
+        label='Email',
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'required': 'required'
+        })
+    )
+    first_name = forms.CharField(
+        label='Имя',
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=30
+    )
+    last_name = forms.CharField(
+        label='Фамилия',
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=30
+    )
+    phone = forms.CharField(
+        label='Телефон',
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=20
+    )
+    country = forms.CharField(
+        label='Страна',
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=100
+    )
+    avatar = forms.ImageField(
+        label='Аватар',
+        required=False,
+        widget=forms.FileInput(attrs={'class': 'form-control'}),
+        help_text='Рекомендуемый размер: 200x200 пикселей'
+    )
 
-    def clean_name(self):
-        """Валидация названия на запрещенные слова"""
-        name = self.cleaned_data['name'].lower()
+    class Meta:
+        model = User
+        fields = ('email', 'first_name', 'last_name', 'avatar', 'phone', 'country')
 
-        for word in self.FORBIDDEN_WORDS:
-            if word in name:
-                raise ValidationError(
-                    f'Название содержит запрещенное слово: "{word}". '
-                    f'Пожалуйста, используйте другое название.'
-                )
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        if phone and not re.match(r'^\+?[1-9]\d{1,14}$', phone):
+            raise ValidationError('Введите корректный номер телефона.')
+        return phone
 
-        return self.cleaned_data['name']
-
-    def clean_description(self):
-        """Валидация описания на запрещенные слова"""
-        description = self.cleaned_data.get('description', '').lower()
-
-        for word in self.FORBIDDEN_WORDS:
-            if word in description:
-                raise ValidationError(
-                    f'Описание содержит запрещенное слово: "{word}". '
-                    f'Пожалуйста, измените описание.'
-                )
-
-        return self.cleaned_data['description']
-
-    def clean_price(self):
-        """Валидация цены - не может быть отрицательной"""
-        price = self.cleaned_data['price']
-
-        if price is not None and price < 0:
-            raise ValidationError('Цена не может быть отрицательной. Введите положительное значение.')
-
-        return price
-
-    def clean_image(self):
-        """Валидация загружаемого изображения"""
-        image = self.cleaned_data.get('image')
-
-        if image:
-            # Проверка расширения файла
-            valid_extensions = ['.jpg', '.jpeg', '.png', '.gif']
-            ext = os.path.splitext(image.name)[1].lower()
-
-            if ext not in valid_extensions:
-                raise ValidationError(
-                    'Поддерживаются только следующие форматы изображений: JPG, JPEG, PNG, GIF'
-                )
-
-            # Проверка размера файла (5 МБ)
-            max_size = 5 * 1024 * 1024  # 5 МБ в байтах
-            if image.size > max_size:
-                raise ValidationError(
-                    f'Размер файла не должен превышать 5 МБ. '
-                    f'Текущий размер: {image.size / 1024 / 1024:.1f} МБ'
-                )
-
-        return image
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+            raise ValidationError('Пользователь с таким email уже существует.')
+        return email

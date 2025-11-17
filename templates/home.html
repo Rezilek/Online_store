@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}главная страница{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1>добро пожаловать в интернет-магазин!</h1>
+    <p class="lead">лучшие товары по лучшим ценам</p>
+    
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <h3>🛒 каталог</h3>
+            <p>огромный выбор товаров</p>
+            <a href="{% url 'catalog:product_list' %}" class="btn btn-primary">перейти в каталог</a>
+        </div>
+        <div class="col-md-4">
+            <h3>📝 блог</h3>
+            <p>полезные статьи и новости</p>
+            <a href="{% url 'blog:blogpost_list' %}" class="btn btn-primary">читать блог</a>
+        </div>
+        <div class="col-md-4">
+            <h3>📞 контакты</h3>
+            <p>свяжитесь с нами</p>
+            <a href="{% url 'catalog:contacts' %}" class="btn btn-primary">контакты</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

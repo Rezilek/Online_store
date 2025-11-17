@@ -1,18 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
-
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'home' %}">🛍️ Магазин</a>
+        <a class="navbar-brand" href="{% url 'home' %}">🛍️ магазин</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -21,26 +9,34 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}">Главная</a>
+                    <a class="nav-link" href="{% url 'home' %}">главная</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'blog:post_list' %}">Блог</a>
+                    <a class="nav-link" href="{% url 'catalog:product_list' %}">каталог</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'contacts' %}">Контакты</a>
+                    <a class="nav-link" href="{% url 'blog:blogpost_list' %}">блог</a>
                 </li>
-                {% if user.is_staff %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'product_create' %}">Добавить товар</a>
+                    <a class="nav-link" href="{% url 'catalog:contacts' %}">контакты</a>
                 </li>
-                {% endif %}
             </ul>
 
             <ul class="navbar-nav">
-                {% if user.is_staff %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/">Админка</a>
-                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:profile' %}">профиль</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:logout' %}">выход</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:login' %}">вход</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:register' %}">регистрация</a>
+                    </li>
                 {% endif %}
             </ul>
         </div>

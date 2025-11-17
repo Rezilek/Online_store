@@ -1,49 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+@"
+{% extends 'base.html' %}
 
-</body>
-</html>
-
-{% extends 'catalog/base.html' %}
-
-{% block title %}Удаление товара{% endblock %}
+{% block title %}удалить товар{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="card">
-            <div class="card-header bg-danger text-white">
-                <h2 class="card-title mb-0">Удаление товара</h2>
+            <div class="card-header">
+                <h4 class=\"card-title mb-0\">удалить товар</h4>
             </div>
-            <div class="card-body">
-                <div class="alert alert-warning">
-                    <h5>Вы уверены, что хотите удалить товар "{{ product.name }}"?</h5>
-                    <p class="mb-0">Это действие нельзя отменить. Все данные о товаре будут удалены.</p>
-                </div>
-
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h6>Информация о товаре:</h6>
-                        <p><strong>Название:</strong> {{ product.name }}</p>
-                        <p><strong>Категория:</strong> {{ product.category.name }}</p>
-                        <p><strong>Цена:</strong> {{ product.price }} руб.</p>
-                    </div>
-                </div>
-
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button type="submit" class="btn btn-danger">Да, удалить</button>
-                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-secondary">Отмена</a>
-                    </div>
-                </form>
+            <div class=\"card-body\">
+                <p>подтверждение удаления товара будет здесь.</p>
+                <p>эта страница доступна только авторизованным пользователям.</p>
+                <a href=\"{% url 'catalog:product_list' %}\" class=\"btn btn-secondary\">назад к каталогу</a>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
+"@ | out-file -filepath "catalog\templates\catalog\product_confirm_delete.html" -encoding utf8
