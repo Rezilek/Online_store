@@ -42,3 +42,8 @@
         </div>
     </div>
 </nav>
+
+<form method="post" action="{% url 'users:logout' %}" class="d-inline">
+    {% csrf_token %}
+    <button type="submit" class="nav-link btn btn-link border-0 p-0">выход</button>
+</form>

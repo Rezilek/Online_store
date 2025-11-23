@@ -1,22 +1,44 @@
-@"
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}добавить товар{% endblock %}
+{% block title %}{% if form.instance.pk %}Редактировать товар{% else %}Создать товар{% endif %}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card">
             <div class="card-header">
-                <h4 class=\"card-title mb-0\">добавить товар</h4>
+                <h4 class="card-title mb-0">
+                    {% if form.instance.pk %}Редактировать товар{% else %}Создать товар{% endif %}
+                </h4>
             </div>
-            <div class=\"card-body\">
-                <p>форма для добавления товара будет здесь.</p>
-                <p>эта страница доступна только авторизованным пользователям.</p>
-                <a href=\"{% url 'catalog:product_list' %}\" class=\"btn btn-secondary\">назад к каталогу</a>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                        <div class="alert alert-danger mt-1">
+                            {{ field.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">
+                            {% if form.instance.pk %}Сохранить{% else %}Создать{% endif %}
+                        </button>
+                        <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary">Отмена</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
-"@ | out-file -filepath "catalog\templates\catalog\product_form.html" -encoding utf8
