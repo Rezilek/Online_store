@@ -1,31 +1,29 @@
+# users/admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User
 
 
-@admin.register(User)
 class CustomUserAdmin(UserAdmin):
-    model = User
+    # Используем только реально существующие поля
     list_display = ('email', 'first_name', 'last_name', 'phone', 'country', 'is_staff')
-    list_filter = ('is_staff', 'is_active', 'country')
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'country')
+    search_fields = ('email', 'first_name', 'last_name', 'phone')
+    ordering = ('email',)
+
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Персональная информация', {'fields': ('first_name', 'last_name', 'avatar', 'phone', 'country')}),
-        ('Права доступа', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        ('Важные даты', {'fields': ('last_login', 'date_joined')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'phone', 'country', 'avatar')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
+
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active')}
-         ),
+            'fields': ('email', 'password1', 'password2'),
+        }),
     )
-    search_fields = ('email', 'first_name', 'last_name')
-    ordering = ('email',)
 
 
-from django.contrib import admin
-
-# Register your models here.
-def site():
-    return None
+admin.site.register(User, CustomUserAdmin)

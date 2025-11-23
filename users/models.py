@@ -1,3 +1,4 @@
+# users/models.py
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
@@ -26,38 +27,21 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+    # Заменяем username на email для авторизации
     username = None
     email = models.EmailField(unique=True, verbose_name='Email')
-    avatar = models.ImageField(upload_to='users/avatars/', blank=True, null=True, verbose_name='Аватар')
-    phone = models.CharField(max_length=20, blank=True, null=True, verbose_name='Номер телефона')
+    phone = models.CharField(max_length=20, blank=True, null=True, verbose_name='Телефон')
     country = models.CharField(max_length=100, blank=True, null=True, verbose_name='Страна')
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, verbose_name='Аватар')
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = []  # Убираем username из обязательных полей
 
     objects = UserManager()
 
-    # добавляем related_name чтобы избежать конфликтов
-    groups = models.ManyToManyField(
-        'auth.Group',
-        verbose_name='groups',
-        blank=True,
-        help_text='The groups this user belongs to.',
-        related_name='custom_user_set',
-        related_query_name='user',
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        verbose_name='user permissions',
-        blank=True,
-        help_text='Specific permissions for this user.',
-        related_name='custom_user_set',
-        related_query_name='user',
-    )
+    def __str__(self):
+        return self.email
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-
-    def __str__(self):
-        return self.email
