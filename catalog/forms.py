@@ -12,12 +12,22 @@ class ProductForm(forms.ModelForm):
         fields = ['name', 'description', 'category', 'price', 'image']
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if field_name == 'image':
                 field.widget.attrs['class'] = 'form-control-file'
             else:
                 field.widget.attrs['class'] = 'form-control'
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if self.user and not instance.pk:  # Только при создании
+            instance.owner = self.user
+            instance.status = 'moderation'  # По умолчанию на модерации
+        if commit:
+            instance.save()
+        return instance
 
     def clean_name(self):
         name = self.cleaned_data['name']
