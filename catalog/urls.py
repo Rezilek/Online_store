@@ -13,4 +13,5 @@ urlpatterns = [
     path('contacts/', views.contacts, name='contacts'),
     path('moderation/', views.product_moderation, name='product_moderation'),
     path('product/<int:pk>/status/<str:status>/', views.change_product_status, name='change_product_status'),
+    path('category/<int:category_id>/', views.category_products, name='category_products'),
 ]
