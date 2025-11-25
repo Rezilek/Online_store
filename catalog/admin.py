@@ -1,45 +1,34 @@
+# catalog/admin.py
 from django.contrib import admin
 from .models import Category, Product
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description')
-    list_filter = ('name',)
-    search_fields = ('name', 'description')
-    list_display_links = ('id', 'name')
+    list_display = ('name',)
+    search_fields = ('name',)
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'price', 'category', 'created_at')
-    list_filter = ('category', 'created_at')
+    list_display = ('name', 'category', 'price', 'owner', 'status', 'created_at')
+    list_filter = ('category', 'status', 'created_at')
     search_fields = ('name', 'description')
-    list_display_links = ('id', 'name')
-    list_editable = ('price',)
-    readonly_fields = ('created_at', 'updated_at')
+    readonly_fields = ('owner', 'created_at', 'updated_at')
 
-    fieldsets = (
-        ('Основная информация', {
-            'fields': ('name', 'description', 'category', 'price')
-        }),
-        ('Изображение', {
-            'fields': ('image',),
-            'classes': ('collapse',)
-        }),
-        ('Даты', {
-            'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)
-        }),
-    )
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(owner=request.user)
 
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:  # Если объект создается впервые
+            obj.owner = request.user
+        super().save_model(request, obj, form, change)
 
-    from .models import Category, Product, Contact
-
-    @admin.register(Contact)
-    class ContactAdmin(admin.ModelAdmin):
-        list_display = ('name', 'email', 'created_at')
-        readonly_fields = ('created_at',)
-        list_filter = ('created_at',)
-        search_fields = ('name', 'email', 'message')
-
+# Если у вас есть модель Contact, добавьте ее в models.py или удалите импорт
+# @admin.register(Contact)
+# class ContactAdmin(admin.ModelAdmin):
+#     list_display = ('name', 'email', 'message')
+#     search_fields = ('name', 'email', 'message')
